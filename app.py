@@ -7,7 +7,6 @@ from google import genai
 import streamlit as st
 import plotly.express as px
 
-# Inicializa o cliente moderno
 client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
 
 USUARIO = "admin"
