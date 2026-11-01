@@ -15,6 +15,17 @@
 </p>
 
 ---
+## 🔑 Acesse a demonstração
+
+Experimente o Market Inventory Control System:
+
+| Credencial | Acesso |
+|---|---|
+| Usuário | `admin` |
+| Senha | `1234` |
+
+> Ambiente disponibilizado para demonstração do projeto.
+
 
 ## 💡 Tudo começa com um desafio.
 
@@ -109,13 +120,14 @@ A ideia é evoluir de um sistema de gestão operacional para uma solução cada 
 
 ## 👨‍💻 Sobre o desenvolvimento
 
-Sou **Gabriel Pereira**, formado em Gestão Financeira e estudante de Administração e Ciência de Dados.
+Sou **Gabriel Braga**, estudante de Administração e Ciência de Dados & Big Data.
 
 Minha experiência com processos logísticos, gestão de materiais e análise de informações despertou meu interesse em desenvolver soluções tecnológicas capazes de resolver problemas reais de negócio.
 
 O Market Inventory Control System é um projeto prático que reúne conhecimentos de programação, banco de dados, automação, Business Intelligence e Inteligência Artificial.
 
-> Acredito que tecnologia e dados não devem apenas organizar informações, mas ajudar pessoas e empresas a tomar decisões melhores.
+> Acredito que grandes transformações não precisam começar com grandes estruturas, mas com boas ideias, tecnologia acessível e vontade de resolver problemas reais.
+
 
 <p align="center">
   <a href="https://github.com/gbp144-hue">
