@@ -410,16 +410,17 @@ with aba5:
         """
 
         with st.chat_message("assistant"):
-            with st.spinner("Analisando os dados e gerando resposta..."):
-                try: 
-                    prompt_completo = f"{contexto}\n\nPergunta do Gestor: {prompt}"
-                        response = client.models.generate_content(
-                        model='gemini-3.8-flash',
-                        contents=prompt_completo,
-                    )
-                    
-                    resposta_ia = response.text
-                    st.markdown(resposta_ia)
+    with st.spinner("Analisando os dados e gerando resposta..."):
+        try:
+            prompt_completo = f"{contexto}\n\nPergunta do Gestor: {prompt}"
+            response = client.models.generate_content(
+                model='gemini-1.5-flash',
+                contents=prompt_completo,
+            )
+            resposta_ia = response.text
+            st.markdown(resposta_ia)
+        except Exception as e:
+            st.error(f"Erro ao comunicar com a IA: {e}")
 
                     st.session_state.mensagens_chat.append({"role": "assistant", "content": resposta_ia})
                 except Exception as e:
