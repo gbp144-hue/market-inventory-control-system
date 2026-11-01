@@ -412,7 +412,7 @@ with aba5:
                 try:
                     prompt_completo = f"{contexto}\n\nPergunta do Gestor: {prompt}"
                     response = client.models.generate_content(
-                        model='gemini-1.5-flash',
+                        model='gemini-2.5-flash',
                         contents=prompt_completo,
                     )
                     resposta_ia = response.text
