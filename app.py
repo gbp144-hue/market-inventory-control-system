@@ -26,8 +26,7 @@ if not st.session_state.autenticado:
             st.session_state.autenticado = True
             st.success("Login bem-sucedido!")
             st.rerun()
-
-        else:
+         else:
             st.error("Usuário ou senha incorretos.")
 
     st.stop()
