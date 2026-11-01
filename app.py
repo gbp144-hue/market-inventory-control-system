@@ -1,12 +1,11 @@
 import streamlit as st
 import sqlite3
 import pandas as pd
+import plotly.express as px
 from datetime import datetime
 from fpdf import FPDF
-from google import genai
-import streamlit as st
-import plotly.express as px
 
+from google import genai
 client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
 
 USUARIO = "admin"
@@ -17,14 +16,13 @@ if "autenticado" not in st.session_state:
 
 if not st.session_state.autenticado:
 
-    st.title("🔐 Login - Mercado Carra")
+    st.title("🔐 Bem-vindo ao Mercado Carra")
 
     usuario_input = st.text_input("Usuário")
     senha_input = st.text_input("Senha", type="password")
 
     if st.button("Entrar"):
-
-        if usuario_input == USUARIO and senha_input == SENHA:
+         if usuario_input == USUARIO and senha_input == SENHA:
             st.session_state.autenticado = True
             st.success("Login bem-sucedido!")
             st.rerun()
@@ -34,9 +32,9 @@ if not st.session_state.autenticado:
 
     st.stop()
 
-st.set_page_config(page_title="Mercado Carra - ERP", layout="centered")
+st.set_page_config(page_title="Mercado Carra", layout="centered")
 
-st.title("🛒 Mercado Carra - ERP")
+st.title("🛒 ERP")
 st.markdown("Seja Bem-Vindo ao Mercado Carra!")
 
 BD_PATH = "Estoque.db"
@@ -66,7 +64,6 @@ def init_bd():
     ''')
     conexao.commit()
     conexao.close()
-
 init_bd()
 
 def gerar_pdf_nota_multipla(venda_id, data_hora, itens_carrinho, valor_total_geral):
@@ -200,6 +197,7 @@ with aba2:
     else:
         st.info("Nenhum produto cadastrado no banco de dados ainda.")    
 
+#--- ABA3: Carrinho de Compras ---
 with aba3:
     st.subheader("Carrinho de Compras")
     
@@ -210,27 +208,21 @@ with aba3:
     conexao.close()
     
     if produtos_disponiveis:
-        # Criamos um dicionário de opções para o selectbox
         opcoes_produtos = {f"{p[0]} - {p[1]} (Disp: {p[2]} {p[3]}) - R$ {p[4]:.2f}": p for p in produtos_disponiveis}
         
-        # Mapeamento reverso para achar a chave pelo código digitado
         codigo_para_opcao = {str(p[0]): chave for chave, p in opcoes_produtos.items()}
         
         st.markdown("---")
-        
-        # 1. Campo de pesquisa por código / leitor de código de barras
+           
         codigo_digitado = st.text_input("🔍 Pesquisar por Código do Produto", placeholder="Digite o código e pressione Enter ou selecione abaixo")
-        
-        # Se o usuário digitou um código válido, filtramos a escolha inicial
+       
         escolha_padrao = 0
         if codigo_digitado in codigo_para_opcao:
             chave_encontrada = codigo_para_opcao[codigo_digitado]
-            # Encontra o índice da opção correspondente na lista
             lista_chaves = list(opcoes_produtos.keys())
             if chave_encontrada in lista_chaves:
                 escolha_padrao = lista_chaves.index(chave_encontrada)
 
-        # 2. Selectbox atualizado (agora pode ser pré-selecionado via código)
         escolha = st.selectbox("Selecione o Produto para Adicionar", list(opcoes_produtos.keys()), index=escolha_padrao)
         
         produto_selecionado = opcoes_produtos[escolha]
@@ -328,21 +320,17 @@ with aba4:
     
     if dados_vendas:
         df_vendas = pd.DataFrame(dados_vendas, columns=["Data/Hora", "Código", "Produto", "Qtd Vendida", "Valor Total (R$)"])
-        
-        # Filtra apenas os itens reais vendidos (removendo a linha de controle "VENDA MULTIPLA")
+     
         df_vendas_itens = df_vendas[df_vendas["Código"] != 0]
-        
-        # Métricas principais no topo
+       
         faturamento_total = df_vendas_itens["Valor Total (R$)"].sum()
         total_itens_vendidos = df_vendas_itens["Qtd Vendida"].sum()
         
         col_m1, col_m2 = st.columns(2)
         col_m1.metric("Faturamento Acumulado", f"R$ {faturamento_total:,.2f}")
         col_m2.metric("Total de Itens Vendidos", int(total_itens_vendidos))
-        
         st.markdown("---")
-        
-        # Se houver vendas reais, exibe os gráficos lado a lado
+       
         if not df_vendas_itens.empty:
             st.markdown("### 📈 Indicadores Visuais")
             col_g1, col_g2 = st.columns(2)
@@ -373,11 +361,9 @@ with aba4:
             
             st.markdown("---")
         
-        # Tabela completa de histórico de vendas
         st.markdown("### 📋 Histórico Detalhado de Transações")
         st.dataframe(df_vendas, use_container_width=True)
         
-        # Botão de download
         csv_vendas = df_vendas.to_csv(index=False).encode('utf-8')
         st.download_button(
             label="📥 Baixar Histórico de Vendas (CSV/Excel)",
@@ -393,11 +379,9 @@ with aba5:
     st.subheader("Assistente de IA")
     st.markdown("Tire as suas dúvidas sobre o estoque, vendas e produtos. Pergunte qualquer coisa relacionada ao sistema.") 
 
-    # Padronizado para 'mensagens_chat'
     if "mensagens_chat" not in st.session_state:
         st.session_state.mensagens_chat = []
 
-    # Exibe o histórico de mensagens
     for message in st.session_state.mensagens_chat:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
@@ -408,7 +392,6 @@ with aba5:
         with st.chat_message("user"):
             st.markdown(prompt)
 
-        # Coleta dados do banco
         conexao = sqlite3.connect(BD_PATH)
         df_prod = pd.read_sql_query("SELECT * FROM produtos", conexao)
         df_vendas = pd.read_sql_query("SELECT * FROM vendas", conexao) 
@@ -432,8 +415,7 @@ with aba5:
                 try: 
                     prompt_completo = f"{contexto}\n\nPergunta do Gestor: {prompt}"
                     
-                    # Chamada atualizada com o modelo gemini-3.8-flash
-                    response = client.models.generate_content(
+                        response = client.models.generate_content(
                         model='gemini-3.8-flash',
                         contents=prompt_completo,
                     )
