@@ -413,7 +413,6 @@ with aba5:
             with st.spinner("Analisando os dados e gerando resposta..."):
                 try: 
                     prompt_completo = f"{contexto}\n\nPergunta do Gestor: {prompt}"
-                    
                         response = client.models.generate_content(
                         model='gemini-3.8-flash',
                         contents=prompt_completo,
