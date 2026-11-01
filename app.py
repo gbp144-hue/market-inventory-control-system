@@ -15,18 +15,17 @@ if "autenticado" not in st.session_state:
     st.session_state.autenticado = False
 
 if not st.session_state.autenticado:
-
     st.title("🔐 Bem-vindo ao Mercado Carra")
 
     usuario_input = st.text_input("Usuário")
     senha_input = st.text_input("Senha", type="password")
 
     if st.button("Entrar"):
-         if usuario_input == USUARIO and senha_input == SENHA:
+        if usuario_input == USUARIO and senha_input == SENHA:
             st.session_state.autenticado = True
             st.success("Login bem-sucedido!")
             st.rerun()
-         else:
+        else:
             st.error("Usuário ou senha incorretos.")
 
     st.stop()
@@ -212,7 +211,7 @@ with aba3:
         codigo_para_opcao = {str(p[0]): chave for chave, p in opcoes_produtos.items()}
         
         st.markdown("---")
-           
+            
         codigo_digitado = st.text_input("🔍 Pesquisar por Código do Produto", placeholder="Digite o código e pressione Enter ou selecione abaixo")
        
         escolha_padrao = 0
@@ -306,7 +305,6 @@ with aba3:
     else:
         st.warning("Não há produtos disponíveis em estoque.")
 
-
 # --- ABA 4: HISTÓRICO E RELATÓRIOS ---
 with aba4:
     st.subheader("📊 Relatório de Vendas e Desempenho")
@@ -350,78 +348,4 @@ with aba4:
             with col_g2:
                 st.markdown("#### Faturamento por Produto (R$)")
                 df_fat_prod = df_vendas_itens.groupby("Produto")["Valor Total (R$)"].sum().reset_index()
-                fig_fat = px.pie(
-                    df_fat_prod, 
-                    names="Produto", 
-                    values="Valor Total (R$)",
-                    hole=0.4
-                )
-                st.plotly_chart(fig_fat, use_container_width=True)
-            
-            st.markdown("---")
-        
-        st.markdown("### 📋 Histórico Detalhado de Transações")
-        st.dataframe(df_vendas, use_container_width=True)
-        
-        csv_vendas = df_vendas.to_csv(index=False).encode('utf-8')
-        st.download_button(
-            label="📥 Baixar Histórico de Vendas (CSV/Excel)",
-            data=csv_vendas,
-            file_name='historico_vendas_mercadocarra.csv',
-            mime='text/csv',
-        )
-    else:
-        st.info("Nenhuma venda registrada até o momento.")
-
-# ---- ABA 5: ASSISTENTE DE IA -----
-with aba5:
-    st.subheader("Assistente de IA")
-    st.markdown("Tire as suas dúvidas sobre o estoque, vendas e produtos. Pergunte qualquer coisa relacionada ao sistema.") 
-
-    if "mensagens_chat" not in st.session_state:
-        st.session_state.mensagens_chat = []
-
-    for message in st.session_state.mensagens_chat:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
-    
-    if prompt := st.chat_input("Ex: Qual produto tem menos estoque hoje?"):
-        st.session_state.mensagens_chat.append({"role": "user", "content": prompt})
-         
-        with st.chat_message("user"):
-            st.markdown(prompt)
-
-        conexao = sqlite3.connect(BD_PATH)
-        df_prod = pd.read_sql_query("SELECT * FROM produtos", conexao)
-        df_vendas = pd.read_sql_query("SELECT * FROM vendas", conexao) 
-        conexao.close()
-
-        contexto = f""" 
-        Você é um assistente de IA para o sistema de gerenciamento de estoque e vendas do Mercado Carra.
-        Aqui estão os dados do estoque e das vendas:
-        
-        PRODUTOS EM ESTOQUE:
-        {df_prod.to_string(index=False)}
-
-        HISTORICO DE VENDAS:
-        {df_vendas.to_string(index=False)}
-        
-        Responda as perguntas do usuário com base nesses dados. Se a pergunta não puder ser respondida com os dados fornecidos, informe que não é possível responder no momento.
-        """
-
-        with st.chat_message("assistant"):
-    with st.spinner("Analisando os dados e gerando resposta..."):
-        try:
-            prompt_completo = f"{contexto}\n\nPergunta do Gestor: {prompt}"
-            response = client.models.generate_content(
-                model='gemini-1.5-flash',
-                contents=prompt_completo,
-            )
-            resposta_ia = response.text
-            st.markdown(resposta_ia)
-        except Exception as e:
-            st.error(f"Erro ao comunicar com a IA: {e}")
-
-                    st.session_state.mensagens_chat.append({"role": "assistant", "content": resposta_ia})
-                except Exception as e:
-                    st.error(f"Erro ao comunicar com a IA: {e}")
+                fig_fat = px.
