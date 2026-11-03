@@ -134,7 +134,7 @@ O Market Inventory Control System é um projeto prático que reúne conhecimento
     <img src="https://img.shields.io/badge/GitHub-gbp144--hue-181717?style=for-the-badge&logo=github" />
   </a>
   <a href="https://www.linkedin.com/in/gabrielbp8/">
-    <img src="https://img.shields.io/badge/LinkedIn-Gabriel%20Pereira-0A66C2?style=for-the-badge&logo=linkedin" />
+    <img src="https://img.shields.io/badge/LinkedIn-Gabriel%20Braga-0A66C2?style=for-the-badge&logo=linkedin" />
   </a>
 </p>
 
